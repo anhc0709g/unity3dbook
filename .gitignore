@@ -3,4 +3,6 @@ Build/
 Library/
 Assets/AssetBundleSample
 Assets/BookAssetBunbleTest/Kitten
+Temp/
+ProjectSettings/
 *~

@@ -21,7 +21,7 @@ public class MainScript : MonoBehaviour {
         {
             BookLoaderScript.assetBundleName = assetBundleName;
             Application.LoadLevel(GlobalConfig.BOOK_LOADER_SCENE);
-            //test 
+            //test 2
         }
         else
         {

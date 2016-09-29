@@ -3,4 +3,10 @@ Build/
 Library/
 Assets/AssetBundleSample
 Assets/BookAssetBunbleTest/Kitten
+Temp/
+ProjectSettings/
+Assets/Kitten/
+Assets/Standard Assets/
+Assets/*.meta
+.gitignore
 *~

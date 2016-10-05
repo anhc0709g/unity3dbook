@@ -2,12 +2,14 @@
 using System.Collections;
 using AssetBundles;
 using Entities;
+using UnityEngine.SceneManagement;
 public class BookLoaderScript : MonoBehaviour
 {
+
     public static  string assetBundleName;
     public string jsonAssetBundleMetaDataFileName = "AssetBundleMetaData";
     public string jsonSceneDataFileName = "Scene";
-    public int currentSceneIdx = 1;
+    public int currentSceneIdx = 0;
     public SceneInfo currentScene;
 
 
@@ -59,6 +61,47 @@ public class BookLoaderScript : MonoBehaviour
             yield return StartCoroutine(request);
     }
 
+	void OnPlay() {
+		SceneManager.UnloadScene(currentScene.name);
+		currentSceneIdx = 2;
+		StartCoroutine(loadSceneMetaData());
+	}
+
+	void OnHome() {
+		SceneManager.LoadScene (1);
+	}
+
+	void OnNext() {
+		if (currentSceneIdx < assetBundleInfo.totalScenes) {
+			SceneManager.UnloadScene(currentScene.name);
+			currentSceneIdx++;
+			StartCoroutine(loadSceneMetaData());
+		}
+	}
+
+	void OnBack() {
+		if (currentSceneIdx > 0) {
+			SceneManager.UnloadScene(currentScene.name);
+			currentSceneIdx--;
+			StartCoroutine(loadSceneMetaData());
+		}
+	}
+
+	void OnPause() {
+		Time.timeScale = 0;
+		gameObject.SendMessage ("ButtonToPause");
+	}
+
+	void OnResume() {
+		Time.timeScale = 1;
+		gameObject.SendMessage ("ButtonToResume");
+	}
+
+	void OnReplay() {
+		SceneManager.UnloadScene(currentScene.name);
+		StartCoroutine(loadSceneMetaData());
+	}
+		
     protected IEnumerator loadAssetBundleMetaData()
     {
         AssetBundleLoadAssetOperation request = AssetBundleManager.LoadAssetAsync(assetBundleName+".metadata", jsonAssetBundleMetaDataFileName, typeof(TextAsset));
@@ -86,6 +129,13 @@ public class BookLoaderScript : MonoBehaviour
     }
     protected IEnumerator LoadScence(SceneInfo sceneInfo)
     {
+		if (currentSceneIdx == 1) {
+			gameObject.SendMessage ("ButtonToBegin");
+		} else if (currentSceneIdx == assetBundleInfo.totalScenes) {
+			gameObject.SendMessage ("ButtonToEnd");
+		} else
+			gameObject.SendMessage ("ButtonToPage");
+
         float startTime = Time.realtimeSinceStartup;
 
         // Load level from assetBundle.
